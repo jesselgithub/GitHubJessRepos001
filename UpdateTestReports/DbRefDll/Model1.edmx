@@ -1,0 +1,829 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Assembly">
+          <Key>
+            <PropertyRef Name="AssemblyId" />
+          </Key>
+          <Property Name="AssemblyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AssemblyName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="AssemblyRelativePath" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BuildDefinition">
+          <Key>
+            <PropertyRef Name="BuildDefinitionId" />
+          </Key>
+          <Property Name="BuildDefinitionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BuildDefinitionName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="VersionName" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="ResultsPath" Type="varchar" MaxLength="255" />
+          <Property Name="ResultsShare" Type="varchar" MaxLength="255" />
+          <Property Name="BuildDefinitionPattern" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="BuildInstance">
+          <Key>
+            <PropertyRef Name="BuildInstanceId" />
+          </Key>
+          <Property Name="BuildInstanceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BuildInstanceName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="BuildDefinitionId" Type="int" Nullable="false" />
+          <Property Name="DateId" Type="varchar" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Fixture">
+          <Key>
+            <PropertyRef Name="FixtureId" />
+          </Key>
+          <Property Name="FixtureId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FixtureName" Type="varchar" MaxLength="800" Nullable="false" />
+          <Property Name="FixtureFullName" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="AssemblyId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReportAssembly">
+          <Key>
+            <PropertyRef Name="BuildInstanceId" />
+            <PropertyRef Name="AssemblyId" />
+          </Key>
+          <Property Name="PassCount" Type="int" />
+          <Property Name="PassPercent" Type="int" />
+          <Property Name="FailCount" Type="int" />
+          <Property Name="FailPercent" Type="int" />
+          <Property Name="IgnoreCount" Type="int" />
+          <Property Name="IgnorePercent" Type="int" />
+          <Property Name="TotalCount" Type="int" />
+          <Property Name="BuildInstanceId" Type="int" Nullable="false" />
+          <Property Name="AssemblyId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReportBuildInstance">
+          <Key>
+            <PropertyRef Name="BuildInstanceId" />
+          </Key>
+          <Property Name="PassCount" Type="int" />
+          <Property Name="PassPercent" Type="float" />
+          <Property Name="FailCount" Type="int" />
+          <Property Name="FailPercent" Type="float" />
+          <Property Name="IgnoreCount" Type="int" />
+          <Property Name="IgnorePercent" Type="float" />
+          <Property Name="TotalCount" Type="int" />
+          <Property Name="BuildInstanceId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReportFixture">
+          <Key>
+            <PropertyRef Name="BuildInstanceId" />
+            <PropertyRef Name="FixtureId" />
+          </Key>
+          <Property Name="PassCount" Type="int" />
+          <Property Name="PassPercent" Type="int" />
+          <Property Name="FailCount" Type="int" />
+          <Property Name="FailPercent" Type="int" />
+          <Property Name="IgnoreCount" Type="int" />
+          <Property Name="IgnorePercent" Type="int" />
+          <Property Name="BuildInstanceId" Type="int" Nullable="false" />
+          <Property Name="FixtureId" Type="int" Nullable="false" />
+          <Property Name="TotalCount" Type="int" />
+        </EntityType>
+        <EntityType Name="Testcase">
+          <Key>
+            <PropertyRef Name="TestcaseId" />
+          </Key>
+          <Property Name="TestcaseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FixtureId" Type="int" Nullable="false" />
+          <Property Name="TestcaseName" Type="varchar" MaxLength="800" Nullable="false" />
+          <Property Name="TestcaseFullName" Type="varchar" MaxLength="1100" />
+        </EntityType>
+        <EntityType Name="TestDate">
+          <Key>
+            <PropertyRef Name="DateId" />
+          </Key>
+          <Property Name="DateId" Type="varchar" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TestReport">
+          <Key>
+            <PropertyRef Name="ReportId" />
+          </Key>
+          <Property Name="ReportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BuildInstanceId" Type="int" Nullable="false" />
+          <Property Name="MachineName" Type="varchar" MaxLength="150" />
+          <Property Name="Success" Type="bit" Nullable="false" />
+          <Property Name="Executed" Type="bit" Nullable="false" />
+          <Property Name="Time" Type="int" Nullable="false" />
+          <Property Name="Message" Type="varchar(max)" />
+          <Property Name="StackTrace" Type="varchar(max)" />
+          <Property Name="TestcaseId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TiaVersion">
+          <Key>
+            <PropertyRef Name="VersionName" />
+          </Key>
+          <Property Name="VersionName" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_BuildDefinition_TiaVersion">
+          <End Role="TiaVersion" Type="Self.TiaVersion" Multiplicity="1" />
+          <End Role="BuildDefinition" Type="Self.BuildDefinition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TiaVersion">
+              <PropertyRef Name="VersionName" />
+            </Principal>
+            <Dependent Role="BuildDefinition">
+              <PropertyRef Name="VersionName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BuildInstance_BuildDefinition1">
+          <End Role="BuildDefinition" Type="Self.BuildDefinition" Multiplicity="1" />
+          <End Role="BuildInstance" Type="Self.BuildInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BuildDefinition">
+              <PropertyRef Name="BuildDefinitionId" />
+            </Principal>
+            <Dependent Role="BuildInstance">
+              <PropertyRef Name="BuildDefinitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BuildInstance_TestDate1">
+          <End Role="TestDate" Type="Self.TestDate" Multiplicity="1" />
+          <End Role="BuildInstance" Type="Self.BuildInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestDate">
+              <PropertyRef Name="DateId" />
+            </Principal>
+            <Dependent Role="BuildInstance">
+              <PropertyRef Name="DateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fixture_Assembly">
+          <End Role="Assembly" Type="Self.Assembly" Multiplicity="1" />
+          <End Role="Fixture" Type="Self.Fixture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Assembly">
+              <PropertyRef Name="AssemblyId" />
+            </Principal>
+            <Dependent Role="Fixture">
+              <PropertyRef Name="AssemblyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportAssembly_Assembly">
+          <End Role="Assembly" Type="Self.Assembly" Multiplicity="1" />
+          <End Role="ReportAssembly" Type="Self.ReportAssembly" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Assembly">
+              <PropertyRef Name="AssemblyId" />
+            </Principal>
+            <Dependent Role="ReportAssembly">
+              <PropertyRef Name="AssemblyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportAssembly_BuildInstance">
+          <End Role="BuildInstance" Type="Self.BuildInstance" Multiplicity="1" />
+          <End Role="ReportAssembly" Type="Self.ReportAssembly" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Principal>
+            <Dependent Role="ReportAssembly">
+              <PropertyRef Name="BuildInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportBuildInstance_BuildInstance">
+          <End Role="BuildInstance" Type="Self.BuildInstance" Multiplicity="1" />
+          <End Role="ReportBuildInstance" Type="Self.ReportBuildInstance" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="BuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Principal>
+            <Dependent Role="ReportBuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportFixture_BuildInstance">
+          <End Role="BuildInstance" Type="Self.BuildInstance" Multiplicity="1" />
+          <End Role="ReportFixture" Type="Self.ReportFixture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Principal>
+            <Dependent Role="ReportFixture">
+              <PropertyRef Name="BuildInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportFixture_Fixture">
+          <End Role="Fixture" Type="Self.Fixture" Multiplicity="1" />
+          <End Role="ReportFixture" Type="Self.ReportFixture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fixture">
+              <PropertyRef Name="FixtureId" />
+            </Principal>
+            <Dependent Role="ReportFixture">
+              <PropertyRef Name="FixtureId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Testcase_Fixture">
+          <End Role="Fixture" Type="Self.Fixture" Multiplicity="1" />
+          <End Role="Testcase" Type="Self.Testcase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fixture">
+              <PropertyRef Name="FixtureId" />
+            </Principal>
+            <Dependent Role="Testcase">
+              <PropertyRef Name="FixtureId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestReport_BuildInstance1">
+          <End Role="BuildInstance" Type="Self.BuildInstance" Multiplicity="1" />
+          <End Role="TestReport" Type="Self.TestReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Principal>
+            <Dependent Role="TestReport">
+              <PropertyRef Name="BuildInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestReport_Testcase1">
+          <End Role="Testcase" Type="Self.Testcase" Multiplicity="1" />
+          <End Role="TestReport" Type="Self.TestReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Testcase">
+              <PropertyRef Name="TestcaseId" />
+            </Principal>
+            <Dependent Role="TestReport">
+              <PropertyRef Name="TestcaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DbModelStoreContainer">
+          <EntitySet Name="Assembly" EntityType="Self.Assembly" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BuildDefinition" EntityType="Self.BuildDefinition" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BuildInstance" EntityType="Self.BuildInstance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fixture" EntityType="Self.Fixture" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportAssembly" EntityType="Self.ReportAssembly" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportBuildInstance" EntityType="Self.ReportBuildInstance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportFixture" EntityType="Self.ReportFixture" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Testcase" EntityType="Self.Testcase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TestDate" EntityType="Self.TestDate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TestReport" EntityType="Self.TestReport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TiaVersion" EntityType="Self.TiaVersion" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BuildDefinition_TiaVersion" Association="Self.FK_BuildDefinition_TiaVersion">
+            <End Role="TiaVersion" EntitySet="TiaVersion" />
+            <End Role="BuildDefinition" EntitySet="BuildDefinition" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BuildInstance_BuildDefinition1" Association="Self.FK_BuildInstance_BuildDefinition1">
+            <End Role="BuildDefinition" EntitySet="BuildDefinition" />
+            <End Role="BuildInstance" EntitySet="BuildInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BuildInstance_TestDate1" Association="Self.FK_BuildInstance_TestDate1">
+            <End Role="TestDate" EntitySet="TestDate" />
+            <End Role="BuildInstance" EntitySet="BuildInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fixture_Assembly" Association="Self.FK_Fixture_Assembly">
+            <End Role="Assembly" EntitySet="Assembly" />
+            <End Role="Fixture" EntitySet="Fixture" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportAssembly_Assembly" Association="Self.FK_ReportAssembly_Assembly">
+            <End Role="Assembly" EntitySet="Assembly" />
+            <End Role="ReportAssembly" EntitySet="ReportAssembly" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportAssembly_BuildInstance" Association="Self.FK_ReportAssembly_BuildInstance">
+            <End Role="BuildInstance" EntitySet="BuildInstance" />
+            <End Role="ReportAssembly" EntitySet="ReportAssembly" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportBuildInstance_BuildInstance" Association="Self.FK_ReportBuildInstance_BuildInstance">
+            <End Role="BuildInstance" EntitySet="BuildInstance" />
+            <End Role="ReportBuildInstance" EntitySet="ReportBuildInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportFixture_BuildInstance" Association="Self.FK_ReportFixture_BuildInstance">
+            <End Role="BuildInstance" EntitySet="BuildInstance" />
+            <End Role="ReportFixture" EntitySet="ReportFixture" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportFixture_Fixture" Association="Self.FK_ReportFixture_Fixture">
+            <End Role="Fixture" EntitySet="Fixture" />
+            <End Role="ReportFixture" EntitySet="ReportFixture" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Testcase_Fixture" Association="Self.FK_Testcase_Fixture">
+            <End Role="Fixture" EntitySet="Fixture" />
+            <End Role="Testcase" EntitySet="Testcase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestReport_BuildInstance1" Association="Self.FK_TestReport_BuildInstance1">
+            <End Role="BuildInstance" EntitySet="BuildInstance" />
+            <End Role="TestReport" EntitySet="TestReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestReport_Testcase1" Association="Self.FK_TestReport_Testcase1">
+            <End Role="Testcase" EntitySet="Testcase" />
+            <End Role="TestReport" EntitySet="TestReport" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Assembly">
+          <Key>
+            <PropertyRef Name="AssemblyId" />
+          </Key>
+          <Property Name="AssemblyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AssemblyName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AssemblyRelativePath" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Fixtures" Relationship="Self.FK_Fixture_Assembly" FromRole="Assembly" ToRole="Fixture" />
+          <NavigationProperty Name="ReportAssemblies" Relationship="DbModel.FK_ReportAssembly_Assembly" FromRole="Assembly" ToRole="ReportAssembly" />
+        </EntityType>
+        <EntityType Name="BuildDefinition">
+          <Key>
+            <PropertyRef Name="BuildDefinitionId" />
+          </Key>
+          <Property Name="BuildDefinitionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BuildDefinitionName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="VersionName" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ResultsPath" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ResultsShare" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TiaVersion" Relationship="Self.FK_BuildDefinition_TiaVersion" FromRole="BuildDefinition" ToRole="TiaVersion" />
+          <NavigationProperty Name="BuildInstances" Relationship="Self.FK_BuildInstance_BuildDefinition1" FromRole="BuildDefinition" ToRole="BuildInstance" />
+          <Property Name="BuildDefinitionPattern" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BuildInstance">
+          <Key>
+            <PropertyRef Name="BuildInstanceId" />
+          </Key>
+          <Property Name="BuildInstanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BuildInstanceName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BuildDefinitionId" Type="Int32" Nullable="false" />
+          <Property Name="DateId" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="BuildDefinition" Relationship="Self.FK_BuildInstance_BuildDefinition1" FromRole="BuildInstance" ToRole="BuildDefinition" />
+          <NavigationProperty Name="TestDate" Relationship="Self.FK_BuildInstance_TestDate1" FromRole="BuildInstance" ToRole="TestDate" />
+          <NavigationProperty Name="TestReports" Relationship="Self.FK_TestReport_BuildInstance" FromRole="BuildInstance" ToRole="TestReport" />
+          <NavigationProperty Name="ReportAssemblies" Relationship="DbModel.FK_ReportAssembly_BuildInstance" FromRole="BuildInstance" ToRole="ReportAssembly" />
+          <NavigationProperty Name="ReportBuildInstance" Relationship="DbModel.FK_ReportBuildInstance_BuildInstance" FromRole="BuildInstance" ToRole="ReportBuildInstance" />
+          <NavigationProperty Name="ReportFixtures" Relationship="DbModel.FK_ReportFixture_BuildInstance" FromRole="BuildInstance" ToRole="ReportFixture" />
+        </EntityType>
+        <EntityType Name="Fixture">
+          <Key>
+            <PropertyRef Name="FixtureId" />
+          </Key>
+          <Property Name="FixtureId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AssemblyId" Type="Int32" Nullable="false" />
+          <Property Name="FixtureName" Type="String" MaxLength="800" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FixtureFullName" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Assembly" Relationship="Self.FK_Fixture_Assembly" FromRole="Fixture" ToRole="Assembly" />
+          <NavigationProperty Name="Testcases" Relationship="Self.FK_Testcase_Fixture1" FromRole="Fixture" ToRole="Testcase" />
+          <NavigationProperty Name="ReportFixtures" Relationship="DbModel.FK_ReportFixture_Fixture" FromRole="Fixture" ToRole="ReportFixture" />
+        </EntityType>
+        <EntityType Name="Testcase">
+          <Key>
+            <PropertyRef Name="TestcaseId" />
+          </Key>
+          <Property Name="TestcaseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FixtureId" Type="Int32" Nullable="false" />
+          <Property Name="TestcaseName" Type="String" MaxLength="800" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TestcaseFullName" Type="String" MaxLength="1100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Fixture" Relationship="Self.FK_Testcase_Fixture1" FromRole="Testcase" ToRole="Fixture" />
+          <NavigationProperty Name="TestReports" Relationship="Self.FK_TestReport_Testcase" FromRole="Testcase" ToRole="TestReport" />
+        </EntityType>
+        <EntityType Name="TestDate">
+          <Key>
+            <PropertyRef Name="DateId" />
+          </Key>
+          <Property Name="DateId" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="BuildInstances" Relationship="Self.FK_BuildInstance_TestDate1" FromRole="TestDate" ToRole="BuildInstance" />
+        </EntityType>
+        <EntityType Name="TestReport">
+          <Key>
+            <PropertyRef Name="ReportId" />
+          </Key>
+          <Property Name="ReportId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BuildInstanceId" Type="Int32" Nullable="false" />
+          <Property Name="MachineName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Success" Type="Boolean" Nullable="false" />
+          <Property Name="Executed" Type="Boolean" Nullable="false" />
+          <Property Name="Time" Type="Int32" Nullable="false" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TestcaseId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BuildInstance" Relationship="Self.FK_TestReport_BuildInstance" FromRole="TestReport" ToRole="BuildInstance" />
+          <NavigationProperty Name="Testcase" Relationship="Self.FK_TestReport_Testcase" FromRole="TestReport" ToRole="Testcase" />
+        </EntityType>
+        <EntityType Name="TiaVersion">
+          <Key>
+            <PropertyRef Name="VersionName" />
+          </Key>
+          <Property Name="VersionName" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="BuildDefinitions" Relationship="Self.FK_BuildDefinition_TiaVersion" FromRole="TiaVersion" ToRole="BuildDefinition" />
+        </EntityType>
+        <Association Name="FK_Fixture_Assembly">
+          <End Role="Assembly" Type="Self.Assembly" Multiplicity="1" />
+          <End Role="Fixture" Type="Self.Fixture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Assembly">
+              <PropertyRef Name="AssemblyId" />
+            </Principal>
+            <Dependent Role="Fixture">
+              <PropertyRef Name="AssemblyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BuildDefinition_TiaVersion">
+          <End Role="TiaVersion" Type="Self.TiaVersion" Multiplicity="1" />
+          <End Role="BuildDefinition" Type="Self.BuildDefinition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TiaVersion">
+              <PropertyRef Name="VersionName" />
+            </Principal>
+            <Dependent Role="BuildDefinition">
+              <PropertyRef Name="VersionName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BuildInstance_BuildDefinition1">
+          <End Role="BuildDefinition" Type="Self.BuildDefinition" Multiplicity="1" />
+          <End Role="BuildInstance" Type="Self.BuildInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BuildDefinition">
+              <PropertyRef Name="BuildDefinitionId" />
+            </Principal>
+            <Dependent Role="BuildInstance">
+              <PropertyRef Name="BuildDefinitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BuildInstance_TestDate1">
+          <End Role="TestDate" Type="Self.TestDate" Multiplicity="1" />
+          <End Role="BuildInstance" Type="Self.BuildInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestDate">
+              <PropertyRef Name="DateId" />
+            </Principal>
+            <Dependent Role="BuildInstance">
+              <PropertyRef Name="DateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestReport_BuildInstance">
+          <End Role="BuildInstance" Type="Self.BuildInstance" Multiplicity="1" />
+          <End Role="TestReport" Type="Self.TestReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Principal>
+            <Dependent Role="TestReport">
+              <PropertyRef Name="BuildInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Testcase_Fixture1">
+          <End Role="Fixture" Type="Self.Fixture" Multiplicity="1" />
+          <End Role="Testcase" Type="Self.Testcase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fixture">
+              <PropertyRef Name="FixtureId" />
+            </Principal>
+            <Dependent Role="Testcase">
+              <PropertyRef Name="FixtureId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestReport_Testcase">
+          <End Role="Testcase" Type="Self.Testcase" Multiplicity="1" />
+          <End Role="TestReport" Type="Self.TestReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Testcase">
+              <PropertyRef Name="TestcaseId" />
+            </Principal>
+            <Dependent Role="TestReport">
+              <PropertyRef Name="TestcaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PEUTEST002Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Assemblies" EntityType="Self.Assembly" />
+          <EntitySet Name="BuildDefinitions" EntityType="Self.BuildDefinition" />
+          <EntitySet Name="BuildInstances" EntityType="Self.BuildInstance" />
+          <EntitySet Name="Fixtures" EntityType="Self.Fixture" />
+          <EntitySet Name="Testcases" EntityType="Self.Testcase" />
+          <EntitySet Name="TestDates" EntityType="Self.TestDate" />
+          <EntitySet Name="TestReports" EntityType="Self.TestReport" />
+          <EntitySet Name="TiaVersions" EntityType="Self.TiaVersion" />
+          <AssociationSet Name="FK_Fixture_Assembly" Association="Self.FK_Fixture_Assembly">
+            <End Role="Assembly" EntitySet="Assemblies" />
+            <End Role="Fixture" EntitySet="Fixtures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BuildDefinition_TiaVersion" Association="Self.FK_BuildDefinition_TiaVersion">
+            <End Role="TiaVersion" EntitySet="TiaVersions" />
+            <End Role="BuildDefinition" EntitySet="BuildDefinitions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BuildInstance_BuildDefinition1" Association="Self.FK_BuildInstance_BuildDefinition1">
+            <End Role="BuildDefinition" EntitySet="BuildDefinitions" />
+            <End Role="BuildInstance" EntitySet="BuildInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BuildInstance_TestDate1" Association="Self.FK_BuildInstance_TestDate1">
+            <End Role="TestDate" EntitySet="TestDates" />
+            <End Role="BuildInstance" EntitySet="BuildInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestReport_BuildInstance" Association="Self.FK_TestReport_BuildInstance">
+            <End Role="BuildInstance" EntitySet="BuildInstances" />
+            <End Role="TestReport" EntitySet="TestReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Testcase_Fixture1" Association="Self.FK_Testcase_Fixture1">
+            <End Role="Fixture" EntitySet="Fixtures" />
+            <End Role="Testcase" EntitySet="Testcases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestReport_Testcase" Association="Self.FK_TestReport_Testcase">
+            <End Role="Testcase" EntitySet="Testcases" />
+            <End Role="TestReport" EntitySet="TestReports" />
+          </AssociationSet>
+          <EntitySet Name="ReportAssemblies" EntityType="DbModel.ReportAssembly" />
+          <EntitySet Name="ReportBuildInstances" EntityType="DbModel.ReportBuildInstance" />
+          <EntitySet Name="ReportFixtures" EntityType="DbModel.ReportFixture" />
+          <AssociationSet Name="FK_ReportAssembly_Assembly" Association="DbModel.FK_ReportAssembly_Assembly">
+            <End Role="Assembly" EntitySet="Assemblies" />
+            <End Role="ReportAssembly" EntitySet="ReportAssemblies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportAssembly_BuildInstance" Association="DbModel.FK_ReportAssembly_BuildInstance">
+            <End Role="BuildInstance" EntitySet="BuildInstances" />
+            <End Role="ReportAssembly" EntitySet="ReportAssemblies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportBuildInstance_BuildInstance" Association="DbModel.FK_ReportBuildInstance_BuildInstance">
+            <End Role="BuildInstance" EntitySet="BuildInstances" />
+            <End Role="ReportBuildInstance" EntitySet="ReportBuildInstances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportFixture_BuildInstance" Association="DbModel.FK_ReportFixture_BuildInstance">
+            <End Role="BuildInstance" EntitySet="BuildInstances" />
+            <End Role="ReportFixture" EntitySet="ReportFixtures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportFixture_Fixture" Association="DbModel.FK_ReportFixture_Fixture">
+            <End Role="Fixture" EntitySet="Fixtures" />
+            <End Role="ReportFixture" EntitySet="ReportFixtures" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ReportAssembly">
+          <Key>
+            <PropertyRef Name="BuildInstanceId" />
+            <PropertyRef Name="AssemblyId" />
+          </Key>
+          <Property Name="PassCount" Type="Int32" />
+          <Property Name="PassPercent" Type="Int32" />
+          <Property Name="FailCount" Type="Int32" />
+          <Property Name="FailPercent" Type="Int32" />
+          <Property Name="IgnoreCount" Type="Int32" />
+          <Property Name="IgnorePercent" Type="Int32" />
+          <Property Name="TotalCount" Type="Int32" />
+          <Property Name="BuildInstanceId" Type="Int32" Nullable="false" />
+          <Property Name="AssemblyId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Assembly" Relationship="DbModel.FK_ReportAssembly_Assembly" FromRole="ReportAssembly" ToRole="Assembly" />
+          <NavigationProperty Name="BuildInstance" Relationship="DbModel.FK_ReportAssembly_BuildInstance" FromRole="ReportAssembly" ToRole="BuildInstance" />
+        </EntityType>
+        <EntityType Name="ReportBuildInstance">
+          <Key>
+            <PropertyRef Name="BuildInstanceId" />
+          </Key>
+          <Property Name="PassCount" Type="Int32" />
+          <Property Name="PassPercent" Type="Double" />
+          <Property Name="FailCount" Type="Int32" />
+          <Property Name="FailPercent" Type="Double" />
+          <Property Name="IgnoreCount" Type="Int32" />
+          <Property Name="IgnorePercent" Type="Double" />
+          <Property Name="TotalCount" Type="Int32" />
+          <Property Name="BuildInstanceId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BuildInstance" Relationship="DbModel.FK_ReportBuildInstance_BuildInstance" FromRole="ReportBuildInstance" ToRole="BuildInstance" />
+        </EntityType>
+        <EntityType Name="ReportFixture">
+          <Key>
+            <PropertyRef Name="BuildInstanceId" />
+            <PropertyRef Name="FixtureId" />
+          </Key>
+          <Property Name="PassCount" Type="Int32" />
+          <Property Name="PassPercent" Type="Int32" />
+          <Property Name="FailCount" Type="Int32" />
+          <Property Name="FailPercent" Type="Int32" />
+          <Property Name="IgnoreCount" Type="Int32" />
+          <Property Name="IgnorePercent" Type="Int32" />
+          <Property Name="BuildInstanceId" Type="Int32" Nullable="false" />
+          <Property Name="FixtureId" Type="Int32" Nullable="false" />
+          <Property Name="TotalCount" Type="Int32" />
+          <NavigationProperty Name="BuildInstance" Relationship="DbModel.FK_ReportFixture_BuildInstance" FromRole="ReportFixture" ToRole="BuildInstance" />
+          <NavigationProperty Name="Fixture" Relationship="DbModel.FK_ReportFixture_Fixture" FromRole="ReportFixture" ToRole="Fixture" />
+        </EntityType>
+        <Association Name="FK_ReportAssembly_Assembly">
+          <End Type="DbModel.Assembly" Role="Assembly" Multiplicity="1" />
+          <End Type="DbModel.ReportAssembly" Role="ReportAssembly" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Assembly">
+              <PropertyRef Name="AssemblyId" />
+            </Principal>
+            <Dependent Role="ReportAssembly">
+              <PropertyRef Name="AssemblyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportAssembly_BuildInstance">
+          <End Type="DbModel.BuildInstance" Role="BuildInstance" Multiplicity="1" />
+          <End Type="DbModel.ReportAssembly" Role="ReportAssembly" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Principal>
+            <Dependent Role="ReportAssembly">
+              <PropertyRef Name="BuildInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportBuildInstance_BuildInstance">
+          <End Type="DbModel.BuildInstance" Role="BuildInstance" Multiplicity="1" />
+          <End Type="DbModel.ReportBuildInstance" Role="ReportBuildInstance" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="BuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Principal>
+            <Dependent Role="ReportBuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportFixture_BuildInstance">
+          <End Type="DbModel.BuildInstance" Role="BuildInstance" Multiplicity="1" />
+          <End Type="DbModel.ReportFixture" Role="ReportFixture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BuildInstance">
+              <PropertyRef Name="BuildInstanceId" />
+            </Principal>
+            <Dependent Role="ReportFixture">
+              <PropertyRef Name="BuildInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportFixture_Fixture">
+          <End Type="DbModel.Fixture" Role="Fixture" Multiplicity="1" />
+          <End Type="DbModel.ReportFixture" Role="ReportFixture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fixture">
+              <PropertyRef Name="FixtureId" />
+            </Principal>
+            <Dependent Role="ReportFixture">
+              <PropertyRef Name="FixtureId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DbModelStoreContainer" CdmEntityContainer="PEUTEST002Entities">
+          <EntitySetMapping Name="Assemblies">
+            <EntityTypeMapping TypeName="DbModel.Assembly">
+              <MappingFragment StoreEntitySet="Assembly">
+                <ScalarProperty Name="AssemblyId" ColumnName="AssemblyId" />
+                <ScalarProperty Name="AssemblyName" ColumnName="AssemblyName" />
+                <ScalarProperty Name="AssemblyRelativePath" ColumnName="AssemblyRelativePath" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BuildDefinitions">
+            <EntityTypeMapping TypeName="DbModel.BuildDefinition">
+              <MappingFragment StoreEntitySet="BuildDefinition">
+                <ScalarProperty Name="BuildDefinitionPattern" ColumnName="BuildDefinitionPattern" />
+                <ScalarProperty Name="BuildDefinitionId" ColumnName="BuildDefinitionId" />
+                <ScalarProperty Name="BuildDefinitionName" ColumnName="BuildDefinitionName" />
+                <ScalarProperty Name="VersionName" ColumnName="VersionName" />
+                <ScalarProperty Name="ResultsPath" ColumnName="ResultsPath" />
+                <ScalarProperty Name="ResultsShare" ColumnName="ResultsShare" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BuildInstances">
+            <EntityTypeMapping TypeName="DbModel.BuildInstance">
+              <MappingFragment StoreEntitySet="BuildInstance">
+                <ScalarProperty Name="BuildInstanceId" ColumnName="BuildInstanceId" />
+                <ScalarProperty Name="BuildInstanceName" ColumnName="BuildInstanceName" />
+                <ScalarProperty Name="BuildDefinitionId" ColumnName="BuildDefinitionId" />
+                <ScalarProperty Name="DateId" ColumnName="DateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fixtures">
+            <EntityTypeMapping TypeName="DbModel.Fixture">
+              <MappingFragment StoreEntitySet="Fixture">
+                <ScalarProperty Name="FixtureId" ColumnName="FixtureId" />
+                <ScalarProperty Name="AssemblyId" ColumnName="AssemblyId" />
+                <ScalarProperty Name="FixtureName" ColumnName="FixtureName" />
+                <ScalarProperty Name="FixtureFullName" ColumnName="FixtureFullName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Testcases">
+            <EntityTypeMapping TypeName="DbModel.Testcase">
+              <MappingFragment StoreEntitySet="Testcase">
+                <ScalarProperty Name="TestcaseId" ColumnName="TestcaseId" />
+                <ScalarProperty Name="FixtureId" ColumnName="FixtureId" />
+                <ScalarProperty Name="TestcaseName" ColumnName="TestcaseName" />
+                <ScalarProperty Name="TestcaseFullName" ColumnName="TestcaseFullName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestDates">
+            <EntityTypeMapping TypeName="DbModel.TestDate">
+              <MappingFragment StoreEntitySet="TestDate">
+                <ScalarProperty Name="DateId" ColumnName="DateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestReports">
+            <EntityTypeMapping TypeName="DbModel.TestReport">
+              <MappingFragment StoreEntitySet="TestReport">
+                <ScalarProperty Name="ReportId" ColumnName="ReportId" />
+                <ScalarProperty Name="BuildInstanceId" ColumnName="BuildInstanceId" />
+                <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+                <ScalarProperty Name="Success" ColumnName="Success" />
+                <ScalarProperty Name="Executed" ColumnName="Executed" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="StackTrace" ColumnName="StackTrace" />
+                <ScalarProperty Name="TestcaseId" ColumnName="TestcaseId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TiaVersions">
+            <EntityTypeMapping TypeName="DbModel.TiaVersion">
+              <MappingFragment StoreEntitySet="TiaVersion">
+                <ScalarProperty Name="VersionName" ColumnName="VersionName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportAssemblies">
+            <EntityTypeMapping TypeName="DbModel.ReportAssembly">
+              <MappingFragment StoreEntitySet="ReportAssembly">
+                <ScalarProperty Name="AssemblyId" ColumnName="AssemblyId" />
+                <ScalarProperty Name="BuildInstanceId" ColumnName="BuildInstanceId" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="IgnorePercent" ColumnName="IgnorePercent" />
+                <ScalarProperty Name="IgnoreCount" ColumnName="IgnoreCount" />
+                <ScalarProperty Name="FailPercent" ColumnName="FailPercent" />
+                <ScalarProperty Name="FailCount" ColumnName="FailCount" />
+                <ScalarProperty Name="PassPercent" ColumnName="PassPercent" />
+                <ScalarProperty Name="PassCount" ColumnName="PassCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportBuildInstances">
+            <EntityTypeMapping TypeName="DbModel.ReportBuildInstance">
+              <MappingFragment StoreEntitySet="ReportBuildInstance">
+                <ScalarProperty Name="BuildInstanceId" ColumnName="BuildInstanceId" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="IgnorePercent" ColumnName="IgnorePercent" />
+                <ScalarProperty Name="IgnoreCount" ColumnName="IgnoreCount" />
+                <ScalarProperty Name="FailPercent" ColumnName="FailPercent" />
+                <ScalarProperty Name="FailCount" ColumnName="FailCount" />
+                <ScalarProperty Name="PassPercent" ColumnName="PassPercent" />
+                <ScalarProperty Name="PassCount" ColumnName="PassCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportFixtures">
+            <EntityTypeMapping TypeName="DbModel.ReportFixture">
+              <MappingFragment StoreEntitySet="ReportFixture">
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="FixtureId" ColumnName="FixtureId" />
+                <ScalarProperty Name="BuildInstanceId" ColumnName="BuildInstanceId" />
+                <ScalarProperty Name="IgnorePercent" ColumnName="IgnorePercent" />
+                <ScalarProperty Name="IgnoreCount" ColumnName="IgnoreCount" />
+                <ScalarProperty Name="FailPercent" ColumnName="FailPercent" />
+                <ScalarProperty Name="FailCount" ColumnName="FailCount" />
+                <ScalarProperty Name="PassPercent" ColumnName="PassPercent" />
+                <ScalarProperty Name="PassCount" ColumnName="PassCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
