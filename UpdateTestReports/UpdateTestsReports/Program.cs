@@ -52,9 +52,9 @@ namespace UpTestDater
                             where x.VersionName == tiaVersion.VersionName
                             select x).ToList())
                         {
-                            var resultpath = Path.Combine(buildDefinition.ResultsShare, buildDefinition.BuildDefinitionName);
+                            //var resultpath = Path.Combine(buildDefinition.ResultsShare, buildDefinition.BuildDefinitionName);
                             int count = 0;
-                            foreach (string build in Directory.GetDirectories(resultpath, "*_*_*", SearchOption.TopDirectoryOnly).Reverse())
+                            foreach (string build in Directory.GetDirectories(buildDefinition.ResultsShare, buildDefinition.BuildDefinitionPattern, SearchOption.TopDirectoryOnly).Reverse())
                             {
                                 ProcessBuildInstance(build, dbc, buildDefinition);
                                 if (++count >= 2)
@@ -419,11 +419,15 @@ AND A.AssemblyRelativePath = B.AssemblyRelativePath";
                 var buildDefnId = buildDefinition.BuildDefinitionId;
                 BuildInstance buildInstance = GetAddBuildInstance(dbc, buildDefnId, buildInstanceName, dateStr);
 
-                var resultsDir = Path.Combine(buildDefinition.ResultsShare, buildDefinition.BuildDefinitionName, build, buildDefinition.ResultsPath);
-                foreach (string xmlFile in Directory.GetFiles(resultsDir, "TestResult_*.xml", SearchOption.AllDirectories))
+                //var resultsDir = Path.Combine(buildDefinition.ResultsShare, buildDefinition.BuildDefinitionName, build, buildDefinition.ResultsPath);
+                foreach (string resultsDir in Directory.GetDirectories(build, buildDefinition.ResultsPath, SearchOption.TopDirectoryOnly))
                 {
-                    ProcessAssembly(dbc, xmlFile, buildInstance, resultsDir);
+                    foreach (string xmlFile in Directory.GetFiles(resultsDir, "TestResult_*.xml", SearchOption.AllDirectories))
+                    {
+                        ProcessAssembly(dbc, xmlFile, buildInstance, resultsDir);
+                    }
                 }
+                //var resultsDir = Path.Combine(build, buildDefinition.ResultsPath);
             }
             catch (Exception ex1Exception)
             {
