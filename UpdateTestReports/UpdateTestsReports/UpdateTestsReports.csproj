@@ -59,6 +59,7 @@
     <Compile Include="Data\LocalFixture.cs" />
     <Compile Include="Data\LocalReport.cs" />
     <Compile Include="Data\LocalTestcase.cs" />
+    <Compile Include="DriveSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

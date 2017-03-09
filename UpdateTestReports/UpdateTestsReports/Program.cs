@@ -22,7 +22,9 @@ namespace UpTestDater
         {
             try
             {
+                //DriveSettings.MapNetworkDrive(@"D:\JDOCS\IC007161\Documents\Visual Studio 2015\Projects\GitHub\Repos\GitHubJessRepos001\UpdateTestReports\UpdateTestsReports\bin\Debug");
 
+                //throw new Exception("hats off");
 
                 using (PEUTEST002Entities dbc = new PEUTEST002Entities())
                 {
@@ -440,8 +442,9 @@ AND A.AssemblyRelativePath = B.AssemblyRelativePath";
         {
             try
             {
+                var share = buildInstance.BuildDefinition.ResultsShare;
                 XmlDocument xdoc = new XmlDocument();
-                xdoc.Load(CopyLocal(xmlFile));
+                xdoc.Load(CopyLocal(share, xmlFile));
 
                 if (!CheckIfValidNUnitXml(xdoc))
                 {
@@ -629,7 +632,7 @@ AND A.AssemblyRelativePath = B.AssemblyRelativePath";
             }
             return integerPart;
         }
-        private static string CopyLocal(string xmlFile)
+        private static string CopyLocal(string share, string xmlFile)
         {
             string currentDir = Environment.CurrentDirectory;
             var root = Path.GetPathRoot(xmlFile);
@@ -637,7 +640,7 @@ AND A.AssemblyRelativePath = B.AssemblyRelativePath";
             {
                 root = $"{root}\\";
             }
-            var newpath = xmlFile.Replace(root, currentDir);
+            var newpath = xmlFile.Replace(share, @"D:\Temp");
             if (!File.Exists(newpath))
             {
                 var dirto = Path.GetDirectoryName(newpath);
